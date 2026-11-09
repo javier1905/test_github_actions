@@ -1,0 +1,10 @@
+.next
+node_modules
+.env
+AGENT*.md
+.env.*
+.vscode
+.git
+*.md
+Dockerfile
+docker-compose*.yml

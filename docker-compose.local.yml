@@ -1,0 +1,37 @@
+services:
+  #--------------------------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.local
+      args:
+        - FRONTEND_NODE_VERSION=${FRONTEND_NODE_VERSION}
+
+    container_name: test-frontend
+    restart: always
+
+    env_file:
+      - ./.env.local
+
+    # Solo se monta el código fuente: .env*, .git, *.md, etc. no entran al contenedor
+    # (un bind mount no respeta .dockerignore, por eso no se monta ./ entero).
+    # node_modules y .next quedan los de la imagen. Si cambian dependencias: up --build.
+    volumes:
+      - type: bind
+        source: ./app
+        target: /app/app
+
+      - type: bind
+        source: ./public
+        target: /app/public
+
+      - type: bind
+        source: ./next.config.ts
+        target: /app/next.config.ts
+
+      - type: bind
+        source: ./tsconfig.json
+        target: /app/tsconfig.json
+
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
