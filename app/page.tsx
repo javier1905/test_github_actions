@@ -18,7 +18,7 @@ export default function Home() {
       <h1 className="text-4xl font-semibold tracking-tight">Bienvenido</h1>
       <p className="max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
         Esta es la página de inicio. Usá la barra de navegación para conocer más
-        sobre nosotros o ponerte en contacto. OOO
+        sobre nosotros o ponerte en contacto.
       </p>
       <p className="w-fit rounded-xl border border-black/[.08] px-4 py-3 dark:border-white/[.145]">
         <span className="text-zinc-500">TEST = </span>
