@@ -1,0 +1,21 @@
+name: CI/CD Test
+run-name: Deployment Test
+
+on:
+    pull_request:
+        types: [closed]
+        branches:
+            - staging
+        paths-ignore:
+            - "README.md"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Build Container
+              run: |
+                  docker compose -f docker-compose.local build --env-file manifest.env build
