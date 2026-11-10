@@ -15,6 +15,14 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
+              
+            - name: Run eslint
+              run: |
+                  pnpm lint
+
+            - name: Run eslint
+              run: |
+                  pnpm lint
 
             - name: Build Container
               run: |
