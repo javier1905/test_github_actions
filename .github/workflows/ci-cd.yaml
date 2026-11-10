@@ -18,4 +18,4 @@ jobs:
 
             - name: Build Container
               run: |
-                  docker compose -f docker-compose.local build --env-file manifest.env build
+                  docker compose -f docker-compose.local --env-file manifest.env build
