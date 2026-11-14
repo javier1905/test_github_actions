@@ -1,6 +1,8 @@
-FROM node:26-alpine AS builder
+ARG NODE_VERSION
 
-RUN apk upgrade --no-cache
+FROM node:${NODE_VERSION}-alpine AS builder
+
+# RUN apk upgrade --no-cache
 # ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 # RUN corepack enable
 
@@ -9,9 +11,7 @@ WORKDIR /app
 COPY package.json .
 COPY pnpm-lock.yaml .
 
-# Extrae la versión de packageManager del package.json e instala esa versión exacta de pnpm globalmente
-RUN PNPM_VERSION=$(node -p "require('./package.json').packageManager.split('@')[1]") && \
-    npm install -g pnpm@$PNPM_VERSION
+RUN npm install -g pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]")
 
 RUN pnpm install --frozen-lockfile
 
@@ -21,7 +21,7 @@ RUN pnpm build:standalone
 RUN cp -r public .next/standalone && cp -r .next/static .next/standalone/.next
 RUN tar -czf app.tar.gz -C .next/standalone .
 
-FROM node:26-alpine AS runner
+FROM node:${NODE_VERSION}-alpine AS runner
 
 WORKDIR /app
 

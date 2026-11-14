@@ -2,43 +2,62 @@ name: CI/CD Test
 run-name: Deployment Test
 
 on:
-    pull_request:
-        types: [closed]
-        branches:
-            - staging
-        paths-ignore:
-            - "README.md"
+  pull_request:
+    types: [closed]
+    branches:
+      - staging
+    paths-ignore:
+      - "README.md"
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+  ci:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version-file: package.json
-                  cache: pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: pnpm
 
-            - name: Show versions
-              run: |
-                  node --version
-                  pnpm --version
+      - name: Show versions
+        run: |
+          node --version
+          pnpm --version
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Run eslint
-              run: pnpm lint
+      - name: Run eslint
+        run: pnpm lint
 
-            - name: Run tests
-              run: pnpm test
+      - name: Run tests
+        run: pnpm test
 
-            - name: Build Container
-              run: |
-                  docker compose -f docker-compose.local.yml --env-file manifest.env build
+  cd:
+    runs-on: ubuntu-24.04
+    needs: ci
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.REGISTRY_GITHUB_TOKEN }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./
+          file: Dockerfile
+          push: true
+          build-args: |
+            NODE_VERSION=26
+          tags: ghcr.io/${{ github.repository_owner }}/frontend:0.0.1
