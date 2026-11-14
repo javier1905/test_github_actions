@@ -1,0 +1,15 @@
+services:
+  frontend:
+    container_name: frontend-production
+    image: frontend-image:${RELEASE}
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - NODE_VERSION=${NODE_VERSION}
+
+    # env_file:
+    #   - ./.env
+    # ports:
+    #   - 4000:${NODE_PORT}

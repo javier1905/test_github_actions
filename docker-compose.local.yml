@@ -13,9 +13,6 @@ services:
     env_file:
       - ./.env.local
 
-    # Solo se monta el código fuente: .env*, .git, *.md, etc. no entran al contenedor
-    # (un bind mount no respeta .dockerignore, por eso no se monta ./ entero).
-    # node_modules y .next quedan los de la imagen. Si cambian dependencias: up --build.
     volumes:
       - type: bind
         source: ./app
