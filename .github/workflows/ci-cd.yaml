@@ -12,6 +12,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-24.04
+    environment: staging
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -41,6 +42,7 @@ jobs:
 
   cd:
     runs-on: ubuntu-24.04
+    environment: staging
     needs: ci
     steps:
       - name: Checkout code
