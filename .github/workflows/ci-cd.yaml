@@ -2,8 +2,7 @@ name: CI/CD Test
 run-name: Deployment Test
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - staging
     paths-ignore:
